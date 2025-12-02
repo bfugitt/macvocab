@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MacVocab v5.1</title>
+    <title>MacVocab v6.1</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,16 +38,6 @@
             color: #000;
         }
 
-        /* Shake Animation for Wrong Answers */
-        @keyframes shake {
-            0% { transform: translateX(0); }
-            20% { transform: translateX(-8px); }
-            40% { transform: translateX(8px); }
-            60% { transform: translateX(-8px); }
-            80% { transform: translateX(8px); }
-            100% { transform: translateX(0); }
-        }
-
         .window {
             background: var(--window-bg);
             border: 2px solid var(--border-color);
@@ -61,135 +51,107 @@
             border-radius: 2px;
         }
         
-        .window.shake-effect {
-            animation: shake 0.4s ease-in-out;
+        .window.shake-effect { animation: shake 0.4s ease-in-out; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
         }
 
         .title-bar {
-            background: repeating-linear-gradient(
-                0deg,
-                #fff,
-                #fff 2px,
-                #000 2px,
-                #000 4px
-            );
-            height: 32px;
-            min-height: 32px;
+            background: repeating-linear-gradient(0deg, #fff, #fff 2px, #000 2px, #000 4px);
+            height: 32px; min-height: 32px;
             border-bottom: 2px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 10px;
-            flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            padding: 0 10px; flex-shrink: 0;
         }
 
         .title-box {
-            background: #fff;
-            padding: 0 15px;
-            font-weight: bold;
-            font-size: 1.3rem;
-            border-left: 2px solid #000;
-            border-right: 2px solid #000;
-            letter-spacing: 1px;
+            background: #fff; padding: 0 15px; font-weight: bold; font-size: 1.3rem;
+            border-left: 2px solid #000; border-right: 2px solid #000; letter-spacing: 1px;
         }
 
         .content {
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            overflow-y: auto; 
-            flex: 1;
+            padding: 15px; display: flex; flex-direction: column; gap: 10px;
+            overflow-y: auto; flex: 1; position: relative;
         }
 
-        .control-group {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            margin-bottom: 10px;
+        /* --- Modal (Report Card) --- */
+        .modal-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); display: none;
+            justify-content: center; align-items: center; z-index: 100;
         }
+        .modal-window {
+            background: #fff; border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0,0,0,0.5);
+            width: 85%; padding: 20px; text-align: center;
+        }
+        .report-card-title { font-size: 2rem; font-weight: bold; border-bottom: 2px dashed #000; margin-bottom: 15px; }
+        .report-score { font-size: 3rem; font-weight: bold; margin: 10px 0; }
+        .report-fraction { font-size: 1.5rem; color: #555; margin-bottom: 20px; }
 
+        /* --- Interstitial Screen --- */
+        .interstitial-box {
+            flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; background: #fff;
+        }
+        .section-title { font-size: 3rem; font-weight: bold; margin-bottom: 10px; }
+        .section-sub { font-size: 1.5rem; font-style: italic; }
+
+        .control-group { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
         label { font-weight: bold; text-transform: uppercase; font-size: 1rem; }
 
         select, input[type="text"] {
-            font-family: 'VT323', monospace;
-            font-size: 1.2rem;
-            padding: 8px;
-            border: 2px solid #000;
-            background: #fff;
-            border-radius: 0;
-            width: 100%;
-            box-sizing: border-box;
-            outline: none;
+            font-family: 'VT323', monospace; font-size: 1.2rem; padding: 8px;
+            border: 2px solid #000; background: #fff; border-radius: 0;
+            width: 100%; box-sizing: border-box; outline: none;
         }
-        
         input[type="text"]:focus { background: #eee; }
         input[type="text"]:disabled { background: #e0e0e0; color: #555; border: 2px dashed #999; }
 
         .btn {
-            font-family: 'VT323', monospace;
-            background: #fff;
-            border: 2px solid #000;
-            padding: 10px;
-            font-size: 1.4rem;
-            cursor: pointer;
-            box-shadow: 3px 3px 0 #000;
-            text-align: center;
-            transition: transform 0.1s, box-shadow 0.1s;
-            touch-action: manipulation;
-            position: relative;
+            font-family: 'VT323', monospace; background: #fff; border: 2px solid #000;
+            padding: 10px; font-size: 1.4rem; cursor: pointer;
+            box-shadow: 3px 3px 0 #000; text-align: center;
+            transition: transform 0.1s, box-shadow 0.1s; position: relative;
         }
-
         .btn:active { transform: translate(3px, 3px); box-shadow: 0 0 0 #000; background: #000; color: #fff; }
-        .btn:disabled { opacity: 0.5; pointer-events: none; transform: none; box-shadow: none; border: 2px dotted #999; background: #ddd;}
-
+        .btn:disabled { opacity: 0.5; pointer-events: none; background: #ddd; box-shadow: none; border: 2px dotted #999; }
         .btn-block { width: 100%; }
         .btn-small { font-size: 1.1rem; padding: 5px 10px; box-shadow: 2px 2px 0 #000; }
-        
         .btn-danger { border: 2px solid #000; color: #000; font-size: 1rem; box-shadow: none; border-style: dashed;}
         .btn-danger:active { background: #000; color: #fff; }
-
         .btn-review { border: 2px solid #000; border-style: double; font-weight: bold; background: #eee; color: #555; }
         .btn-review.has-data { background: #fff; color: #000; border-style: solid; box-shadow: 3px 3px 0 #000; }
         .btn-review.active { background: #000; color: #fff; box-shadow: inset 2px 2px 0 #555; }
-
         .btn.selected { background: #000; color: #fff; box-shadow: inset 3px 3px 0 #555; }
 
         .screen { display: none; height: 100%; flex-direction: column; }
         .screen.active { display: flex; }
 
         .stats-bar {
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 2px dashed #000;
-            padding-bottom: 5px;
-            margin-bottom: 10px;
-            flex-shrink: 0;
-            font-size: 1.2rem;
+            display: flex; justify-content: space-between;
+            border-bottom: 2px dashed #000; padding-bottom: 5px; margin-bottom: 10px;
+            flex-shrink: 0; font-size: 1.2rem;
         }
 
-        .activity-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .activity-btn { padding: 12px 5px; font-size: 1.2rem; display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 10px; }
+        .activity-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 10px; } 
+        .activity-btn { padding: 10px 5px; font-size: 1.1rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; }
 
         .question-box { text-align: center; margin: 10px 0; flex-shrink: 0; }
         .main-word { font-size: 2.5rem; font-weight: bold; display: block; line-height: 1; margin-bottom: 5px;}
         .sub-text { font-size: 1.2rem; font-style: italic; color: #444; }
         
         .feedback-area { 
-            min-height: 40px; 
-            text-align: center; 
-            font-weight: bold; 
-            margin-top: 10px; 
-            flex-shrink: 0;
-            font-size: 1.2rem;
-            border-top: 1px dotted #000;
-            padding-top: 5px;
+            min-height: 40px; text-align: center; font-weight: bold; margin-top: 10px;
+            flex-shrink: 0; font-size: 1.2rem; border-top: 1px dotted #000; padding-top: 5px;
             transition: background 0.2s, color 0.2s;
         }
-        
-        /* Feedback States */
         .feedback-area.correct-state { background: #fff; color: #000; }
         .feedback-area.wrong-state { background: #000; color: #fff; }
+        .correct { background: #000; color: #fff; padding: 0 5px; }
+        .incorrect-msg { color: #000; font-weight: bold; }
 
         .choices-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; flex-grow: 1; overflow-y: auto; }
         .choices-grid .btn { font-size: 1.1rem; padding: 8px; }
@@ -202,9 +164,9 @@
 
         .tile-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; flex-grow: 1; align-content: center; }
         .tile-card {
-            background: #fff; border: 2px solid #000; height: 80px;
+            background: #fff; border: 2px solid #000; height: 70px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.2rem; cursor: pointer; box-shadow: 3px 3px 0 #000;
+            font-size: 1rem; cursor: pointer; box-shadow: 3px 3px 0 #000;
             position: relative; text-align: center; padding: 5px; line-height: 1.1;
         }
         .tile-card.flipped { background: #fff; color: #000; }
@@ -241,9 +203,9 @@
 
         @media (max-width: 400px) {
             .choices-grid { grid-template-columns: 1fr; }
-            .activity-grid { grid-template-columns: 1fr; }
+            .activity-grid { grid-template-columns: 1fr 1fr; }
             .tile-grid { grid-template-columns: repeat(3, 1fr); gap: 5px; }
-            .tile-card { height: 60px; font-size: 1rem; }
+            .tile-card { height: 60px; font-size: 0.9rem; }
         }
 
     </style>
@@ -252,7 +214,7 @@
 
 <div class="window" id="main-window">
     <div class="title-bar">
-        <div class="title-box">MacVocab v5.1</div>
+        <div class="title-box">MacVocab v6.1</div>
     </div>
     
     <div class="content">
@@ -284,7 +246,7 @@
 
             <div class="activity-grid">
                 <button class="btn activity-btn" onclick="setActivity('quiz')">
-                    <span>[?]</span> Quiz
+                    <span>[?]</span> Definitions
                 </button>
                 <button class="btn activity-btn" onclick="setActivity('macman')">
                     <span>(^_^;)</span> MacMan
@@ -295,6 +257,9 @@
                 <button class="btn activity-btn" onclick="setActivity('match')">
                     <span>[=]</span> Tile Match
                 </button>
+                <button class="btn activity-btn" onclick="setActivity('synant')">
+                    <span>&lt;-&gt;</span> Syn/Ant ID
+                </button>
                 <button class="btn activity-btn" onclick="setActivity('spell')">
                     <span>(o_o)</span> Flash & Spell
                 </button>
@@ -302,23 +267,32 @@
                     <span>A-Z</span> Alphabetize
                 </button>
                 <button class="btn activity-btn" onclick="setActivity('jumble')">
-                    <span>%#@</span> Word Jumble
+                    <span>%#@</span> Jumble
                 </button>
                 <button class="btn activity-btn" onclick="setActivity('cards')">
                     <span>[ ]</span> HyperCards
                 </button>
             </div>
 
-            <div class="bottom-nav" style="display:flex; flex-direction:column; gap:5px;">
-                <button class="btn btn-block" onclick="startGame()">START GAME</button>
-                <button class="btn btn-danger" style="border:none; box-shadow:none; background:transparent;" onclick="resetData()">Reset Progress</button>
+            <div class="bottom-nav" style="display:flex; flex-direction:row; gap:5px;">
+                <button class="btn btn-block" style="flex:2;" onclick="startRandomGame()">RANDOM GAME</button>
+                <button class="btn btn-small" style="flex:1; border: 2px dashed #000; font-size: 1rem;" onclick="startUnitTest()">TEST</button>
+                <button class="btn btn-danger btn-small" style="flex:0.5; font-size:0.9rem;" onclick="resetData()">X</button>
+            </div>
+        </div>
+
+        <!-- === INTERSTITIAL SCREEN === -->
+        <div id="interstitial-screen" class="screen">
+            <div class="interstitial-box">
+                <div class="section-title" id="inter-title">SECTION</div>
+                <div class="section-sub" id="inter-sub">Get Ready...</div>
             </div>
         </div>
 
         <!-- === QUIZ SCREEN === -->
         <div id="quiz-screen" class="screen">
             <div class="stats-bar">
-                <span>Quiz</span>
+                <span>Definitions</span>
                 <span id="quiz-progress">1/10</span>
             </div>
             <div class="question-box">
@@ -366,6 +340,23 @@
             </div>
             <div id="match-grid" class="tile-grid"></div>
             <div id="match-feedback" class="feedback-area"></div>
+            <button class="btn btn-small" onclick="quitGame()">Main Menu</button>
+        </div>
+
+        <!-- === SYN/ANT ID SCREEN === -->
+        <div id="synant-screen" class="screen">
+            <div class="stats-bar">
+                <span>Synonym / Antonym ID</span>
+                <span id="synant-progress">1/10</span>
+            </div>
+            <div class="question-box">
+                <span id="synant-clue" style="font-size: 1.8rem; font-weight: bold;">HAPPY</span>
+                <div style="margin-top: 5px;">
+                    is a <span id="synant-type" style="text-decoration:underline;">synonym</span> for...
+                </div>
+            </div>
+            <div id="synant-interaction-area" style="flex-grow: 1; overflow-y: auto; display:flex; flex-direction:column; justify-content:center;"></div>
+            <div id="synant-feedback" class="feedback-area"></div>
             <button class="btn btn-small" onclick="quitGame()">Main Menu</button>
         </div>
 
@@ -436,6 +427,17 @@
         </div>
 
     </div>
+
+    <!-- === TEST REPORT CARD MODAL === -->
+    <div id="report-modal" class="modal-overlay">
+        <div class="modal-window">
+            <div class="report-card-title">UNIT TEST REPORT</div>
+            <div class="report-score" id="report-percent">95%</div>
+            <div class="report-fraction" id="report-fraction">19 / 20 Correct</div>
+            <button class="btn btn-block" onclick="closeReportCard()">Close</button>
+        </div>
+    </div>
+
 </div>
 
 <script>
@@ -693,15 +695,18 @@
         { u: 18, w: "tribute", d: "Something given or done to show respect.", s: "praise, honor", a: "insult, criticism", ex: "We held a short ______ to honor the founder of the school." }
     ];
 
+
     let state = {
         xp: 0, missed: [], pool: [], currentIndex: 0, currentActivity: null,
-        isReviewing: false, inputMode: 'choice', 
+        isReviewing: false, inputMode: 'choice', isTestMode: false,
+        testScore: 0, testTotal: 0, testQueue: [], lastTestSection: null,
         mmGuesses: [], mmWrong: 0, mmWord: "",
         matchCards: [], matchFlipped: [], matchType: 'syn',
+        synTarget: null, synType: 'syn',
         spellWord: "", cardFlipped: false, alphaOrder: []
     };
 
-    const STORAGE_KEY = 'macvocab_v5';
+    const STORAGE_KEY = 'macvocab_v6';
 
     window.onload = () => {
         loadData();
@@ -807,23 +812,30 @@
     }
     function cleanString(s) { return s.trim().toLowerCase(); }
 
-    function startGame() { setActivity('quiz'); } 
+    // --- ACTIVITY ROUTER ---
+    function startRandomGame() {
+        const games = ['quiz', 'macman', 'sentence', 'synant', 'spell', 'alpha', 'jumble', 'match'];
+        const randomGame = games[Math.floor(Math.random() * games.length)];
+        setActivity(randomGame);
+    }
 
     function setActivity(act) {
+        state.isTestMode = false;
         state.pool = shuffle(getPool());
         if(state.pool.length === 0) { alert("No words available!"); return; }
+        
         state.inputMode = document.getElementById('input-mode').value;
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         state.currentIndex = 0;
         state.currentActivity = act;
         
-        // Remove lingering feedback states
+        // Reset Visuals
         document.querySelectorAll('.feedback-area').forEach(el => el.className = 'feedback-area');
 
         const loaders = {
             'quiz': startQuiz, 'macman': startMacMan, 'sentence': startSentence,
-            'match': startMatch, 'spell': startSpell, 'alpha': startAlpha,
-            'jumble': startJumble, 'cards': startCards
+            'match': startMatch, 'synant': startSynAnt, 'spell': startSpell, 
+            'alpha': startAlpha, 'jumble': startJumble, 'cards': startCards
         };
         if(loaders[act]) loaders[act]();
     }
@@ -834,52 +846,150 @@
         updateReviewUI();
     }
 
+    // --- UNIT TEST LOGIC ---
+    function startUnitTest() {
+        state.pool = shuffle(getPool());
+        if(state.pool.length < 4) { alert("Need at least 4 words for a test!"); return; }
+        
+        state.isTestMode = true;
+        state.testScore = 0;
+        state.testQueue = [];
+        state.lastTestSection = null;
+        
+        // Build Test Queue: 3 Quiz, 3 Sent, 3 Spell, 3 SynAnt (if data allows)
+        const makeTask = (type) => ({ type: type, item: state.pool[Math.floor(Math.random()*state.pool.length)] });
+        
+        for(let i=0; i<3; i++) state.testQueue.push(makeTask('quiz'));
+        for(let i=0; i<3; i++) state.testQueue.push(makeTask('sentence'));
+        for(let i=0; i<3; i++) state.testQueue.push(makeTask('spell'));
+        
+        const synPool = state.pool.filter(w => (w.s && w.s.length > 2) || (w.a && w.a.length > 2));
+        if(synPool.length > 0) {
+            for(let i=0; i<3; i++) state.testQueue.push({ type: 'synant', item: synPool[Math.floor(Math.random()*synPool.length)] });
+        }
+
+        state.testTotal = state.testQueue.length;
+        state.currentIndex = 0;
+        
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        runTestStep();
+    }
+
+    function runTestStep() {
+        if(state.currentIndex >= state.testQueue.length) {
+            showReportCard();
+            return;
+        }
+        
+        const task = state.testQueue[state.currentIndex];
+        
+        if (task.type !== state.lastTestSection) {
+            showInterstitial(task.type);
+            state.lastTestSection = task.type;
+            return; 
+        }
+
+        const realPool = state.pool; 
+        state.pool = [task.item];
+        
+        if(task.type === 'quiz') startQuiz(true);
+        else if(task.type === 'sentence') startSentence(true);
+        else if(task.type === 'spell') startSpell(true);
+        else if(task.type === 'synant') startSynAnt(true);
+        
+        state.pool = realPool; 
+    }
+
+    function showInterstitial(type) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        const screen = document.getElementById('interstitial-screen');
+        screen.classList.add('active');
+        
+        let title = "NEXT SECTION";
+        let sub = "Get Ready...";
+        
+        if (type === 'quiz') { title = "DEFINITIONS"; sub = "Choose the matching word"; }
+        else if (type === 'sentence') { title = "SENTENCES"; sub = "Fill in the blank"; }
+        else if (type === 'spell') { title = "SPELLING"; sub = "Memorize and type"; }
+        else if (type === 'synant') { title = "SYNONYMS & ANTONYMS"; sub = "Find the relationship"; }
+        
+        document.getElementById('inter-title').innerText = title;
+        document.getElementById('inter-sub').innerText = sub;
+        
+        setTimeout(() => {
+            screen.classList.remove('active');
+            runTestStep();
+        }, 2000);
+    }
+
+    function showReportCard() {
+        const pct = Math.round((state.testScore / state.testTotal) * 100);
+        document.getElementById('report-percent').innerText = pct + "%";
+        document.getElementById('report-fraction').innerText = `${state.testScore} / ${state.testTotal} Correct`;
+        document.getElementById('report-modal').style.display = 'flex';
+    }
+
+    function closeReportCard() {
+        document.getElementById('report-modal').style.display = 'none';
+        quitGame();
+    }
+
     // --- CENTRAL GAME LOOP LOGIC ---
     function handleTurnResult(isCorrect, feedbackElId, nextRoundFn, item) {
         const feedback = document.getElementById(feedbackElId);
         const win = document.getElementById('main-window');
         
-        // Remove previous states
         feedback.className = 'feedback-area';
         win.classList.remove('shake-effect');
         
         if (isCorrect) {
+            if(state.isTestMode) state.testScore++;
+            else { state.xp += 10; saveData(); }
+            
             feedback.classList.add('correct-state');
-            feedback.innerHTML = `CORRECT! (+10 XP)`;
-            state.xp += 10; saveData();
+            feedback.innerHTML = `CORRECT!`;
             setTimeout(() => {
-                feedback.className = 'feedback-area'; // reset
-                state.currentIndex++;
-                if(state.currentIndex >= state.pool.length) state.currentIndex = 0;
-                nextRoundFn();
+                feedback.className = 'feedback-area';
+                advanceGame(nextRoundFn);
             }, 1000);
         } else {
             addMissed(item);
-            // Trigger Shake
-            void win.offsetWidth; // reflow
-            win.classList.add('shake-effect');
-            
+            void win.offsetWidth; win.classList.add('shake-effect');
             feedback.classList.add('wrong-state');
-            feedback.innerHTML = `CORRECT ANSWER: ${item.w.toUpperCase()}`;
-            
+            feedback.innerHTML = `CORRECT: ${item.w.toUpperCase()}`;
             setTimeout(() => {
-                feedback.className = 'feedback-area'; // reset
-                state.currentIndex++;
-                if(state.currentIndex >= state.pool.length) state.currentIndex = 0;
-                nextRoundFn();
-            }, 3000); // 3 seconds delay
+                feedback.className = 'feedback-area';
+                advanceGame(nextRoundFn);
+            }, 3000);
+        }
+    }
+
+    function advanceGame(nextRoundFn) {
+        if (state.isTestMode) {
+            state.currentIndex++; 
+            runTestStep();
+        } else {
+            state.currentIndex++;
+            if(state.currentIndex >= state.pool.length) state.currentIndex = 0;
+            nextRoundFn();
         }
     }
 
     // === QUIZ ===
-    function startQuiz() { document.getElementById('quiz-screen').classList.add('active'); loadQuizQ(); }
-    function loadQuizQ() {
-        const item = state.pool[state.currentIndex];
-        document.getElementById('quiz-progress').innerText = `${state.currentIndex+1}/${state.pool.length}`;
+    function startQuiz(isTest) {
+        document.getElementById('quiz-screen').classList.add('active'); 
+        loadQuizQ(isTest ? 0 : state.currentIndex); 
+    }
+    function loadQuizQ(idx) {
+        const idxToUse = (typeof idx !== 'undefined') ? idx : state.currentIndex;
+        const item = state.pool[idxToUse];
+        
+        const prog = state.isTestMode ? `${state.currentIndex+1}/${state.testTotal}` : `${idxToUse+1}/${state.pool.length}`;
+        document.getElementById('quiz-progress').innerText = prog;
+        
         document.getElementById('quiz-def').innerText = item.d;
         document.getElementById('quiz-feedback').innerHTML = "";
-        const area = document.getElementById('quiz-interaction-area');
-        area.innerHTML = '';
+        const area = document.getElementById('quiz-interaction-area'); area.innerHTML = '';
 
         if (state.inputMode === 'choice') {
             area.className = 'choices-grid';
@@ -890,7 +1000,7 @@
                 btn.className = 'btn'; btn.innerText = c.w;
                 btn.onclick = () => {
                     Array.from(area.children).forEach(b => b.disabled = true);
-                    handleTurnResult(c.w === item.w, 'quiz-feedback', loadQuizQ, item);
+                    handleTurnResult(c.w === item.w, 'quiz-feedback', () => loadQuizQ(), item);
                 };
                 area.appendChild(btn);
             });
@@ -901,14 +1011,12 @@
             input.style.textAlign = 'center'; input.autocomplete = 'off';
             const btn = document.createElement('button');
             btn.className = 'btn btn-block'; btn.innerText = 'Submit'; btn.style.marginTop = '10px';
-            
             const submit = () => {
                 if(input.disabled) return;
                 input.disabled = true; btn.disabled = true; 
-                handleTurnResult(cleanString(input.value) === cleanString(item.w), 'quiz-feedback', loadQuizQ, item);
+                handleTurnResult(cleanString(input.value) === cleanString(item.w), 'quiz-feedback', () => loadQuizQ(), item);
             };
-            btn.onclick = submit;
-            input.addEventListener('keypress', (e) => { if(e.key === 'Enter') submit(); });
+            btn.onclick = submit; input.addEventListener('keypress', (e) => { if(e.key === 'Enter') submit(); });
             area.appendChild(input); area.appendChild(btn);
             input.focus();
         }
@@ -959,10 +1067,16 @@
     }
 
     // === SENTENCES ===
-    function startSentence() { document.getElementById('sentence-screen').classList.add('active'); loadSentence(); }
-    function loadSentence() {
-        const item = state.pool[state.currentIndex];
-        document.getElementById('sent-progress').innerText = `${state.currentIndex+1}/${state.pool.length}`;
+    function startSentence(isTest) {
+        document.getElementById('sentence-screen').classList.add('active'); 
+        loadSentence(isTest ? 0 : state.currentIndex);
+    }
+    function loadSentence(idx) {
+        const idxToUse = (typeof idx !== 'undefined') ? idx : state.currentIndex;
+        const item = state.pool[idxToUse];
+        const prog = state.isTestMode ? `${state.currentIndex+1}/${state.testTotal}` : `${idxToUse+1}/${state.pool.length}`;
+        document.getElementById('sent-progress').innerText = prog;
+        
         document.getElementById('sent-text').innerHTML = item.ex.replace('______', '<span class="blank-spot"></span>');
         document.getElementById('sent-feedback').innerHTML = '';
         const area = document.getElementById('sent-interaction-area'); area.innerHTML = '';
@@ -975,7 +1089,7 @@
                 const btn = document.createElement('button'); btn.className = 'btn'; btn.innerText = c.w;
                 btn.onclick = () => {
                     Array.from(area.children).forEach(b => b.disabled = true);
-                    handleTurnResult(c.w === item.w, 'sent-feedback', loadSentence, item);
+                    handleTurnResult(c.w === item.w, 'sent-feedback', () => loadSentence(), item);
                 };
                 area.appendChild(btn);
             });
@@ -989,14 +1103,14 @@
             const submit = () => {
                 if(input.disabled) return;
                 input.disabled = true; btn.disabled = true;
-                handleTurnResult(cleanString(input.value) === cleanString(item.w), 'sent-feedback', loadSentence, item);
+                handleTurnResult(cleanString(input.value) === cleanString(item.w), 'sent-feedback', () => loadSentence(), item);
             };
             btn.onclick = submit; input.addEventListener('keypress', (e)=>{if(e.key==='Enter')submit()});
             area.appendChild(input); area.appendChild(btn); input.focus();
         }
     }
 
-    // === TILE MATCH ===
+    // === TILE MATCH (MEMORY) ===
     function startMatch() { document.getElementById('match-screen').classList.add('active'); state.matchType = (Math.random() > 0.5) ? 'syn' : 'ant'; loadMatch(); }
     function loadMatch() {
         document.getElementById('match-mode-label').innerText = state.matchType === 'syn' ? 'Match Synonyms' : 'Match Antonyms';
@@ -1032,7 +1146,7 @@
                 setTimeout(() => {
                     state.matchCards[idx1].matched = true; state.matchCards[idx2].matched = true;
                     state.matchFlipped = []; renderMatchGrid();
-                    state.xp += 5; saveData();
+                    state.xp += 5; saveData(); document.getElementById('match-score').innerText = `Score: ${Math.floor(state.xp/5)}`;
                     if (state.matchCards.every(c => c.matched)) {
                         state.xp += 20; saveData();
                         setTimeout(() => { state.matchType = (state.matchType === 'syn') ? 'ant' : 'syn'; loadMatch(); }, 2000);
@@ -1042,38 +1156,84 @@
         }
     }
 
-    // === JUMBLE ===
-    function startJumble() { document.getElementById('jumble-screen').classList.add('active'); loadJumble(); }
-    function loadJumble() {
-        const item = state.pool[state.currentIndex];
-        document.getElementById('jumble-progress').innerText = `${state.currentIndex+1}/${state.pool.length}`;
-        const scrambled = item.w.split('').sort(() => Math.random() - 0.5).join('');
-        document.getElementById('jumble-word').innerText = scrambled;
-        document.getElementById('jumble-feedback').innerHTML = "";
+    // === SYN/ANT ID ===
+    function startSynAnt(isTest) {
+        document.getElementById('synant-screen').classList.add('active');
+        if (!isTest) {
+            let attempts = 0;
+            while(attempts < state.pool.length) {
+                const item = state.pool[state.currentIndex];
+                const hasSyn = item.s && item.s.length > 2;
+                const hasAnt = item.a && item.a.length > 2;
+                if(hasSyn || hasAnt) break;
+                state.currentIndex++;
+                if(state.currentIndex >= state.pool.length) state.currentIndex = 0;
+                attempts++;
+            }
+        }
+        loadSynAnt(isTest ? 0 : state.currentIndex);
+    }
+
+    function loadSynAnt(idx) {
+        const idxToUse = (typeof idx !== 'undefined') ? idx : state.currentIndex;
+        const item = state.pool[idxToUse];
+        const prog = state.isTestMode ? `${state.currentIndex+1}/${state.testTotal}` : `${idxToUse+1}/${state.pool.length}`;
+        document.getElementById('synant-progress').innerText = prog;
         
-        const area = document.getElementById('jumble-interaction-area'); area.innerHTML = '';
-        area.className = '';
-        const input = document.createElement('input');
-        input.type = 'text'; input.placeholder = 'Unscramble...';
-        input.style.textAlign = 'center'; input.autocomplete = 'off';
-        const btn = document.createElement('button');
-        btn.className = 'btn btn-block'; btn.innerText = 'Check'; btn.style.marginTop = '10px';
-        const submit = () => {
-            if (input.disabled) return;
-            input.disabled = true; btn.disabled = true;
-            handleTurnResult(cleanString(input.value) === cleanString(item.w), 'jumble-feedback', loadJumble, item);
-        };
-        btn.onclick = submit; input.addEventListener('keypress', (e)=>{if(e.key==='Enter')submit()});
-        area.appendChild(input); area.appendChild(btn); input.focus();
+        const hasSyn = item.s && item.s.length > 2;
+        const hasAnt = item.a && item.a.length > 2;
+        state.synType = (hasSyn && hasAnt) ? (Math.random()>0.5 ? 'syn' : 'ant') : (hasSyn ? 'syn' : 'ant');
+        
+        const sourceStr = state.synType === 'syn' ? item.s : item.a;
+        const clueWord = sourceStr.split(',')[0].trim().toUpperCase();
+        
+        document.getElementById('synant-clue').innerText = clueWord;
+        document.getElementById('synant-type').innerText = state.synType === 'syn' ? 'synonym' : 'antonym';
+        
+        document.getElementById('synant-feedback').innerHTML = "";
+        const area = document.getElementById('synant-interaction-area'); area.innerHTML = '';
+
+        if (state.inputMode === 'choice') {
+            area.className = 'choices-grid';
+            let distractors = shuffle(RAW_DATA.filter(x => x.w !== item.w)).slice(0, 5); 
+            let choices = shuffle([item, ...distractors]);
+            choices.forEach(c => {
+                const btn = document.createElement('button'); btn.className = 'btn'; btn.innerText = c.w;
+                btn.onclick = () => {
+                    Array.from(area.children).forEach(b => b.disabled = true);
+                    handleTurnResult(c.w === item.w, 'synant-feedback', () => loadSynAnt(), item);
+                };
+                area.appendChild(btn);
+            });
+        } else {
+            area.className = '';
+            const input = document.createElement('input');
+            input.type = 'text'; input.placeholder = 'Type word here...';
+            input.style.textAlign = 'center'; input.autocomplete = 'off';
+            const btn = document.createElement('button');
+            btn.className = 'btn btn-block'; btn.innerText = 'Submit'; btn.style.marginTop = '10px';
+            const submit = () => {
+                if(input.disabled) return;
+                input.disabled = true; btn.disabled = true;
+                handleTurnResult(cleanString(input.value) === cleanString(item.w), 'synant-feedback', () => loadSynAnt(), item);
+            };
+            btn.onclick = submit; input.addEventListener('keypress', (e)=>{if(e.key==='Enter')submit()});
+            area.appendChild(input); area.appendChild(btn); input.focus();
+        }
     }
 
     // === FLASH & SPELL ===
-    function startSpell() { document.getElementById('spell-screen').classList.add('active'); loadSpell(); }
-    function loadSpell() {
-        const item = state.pool[state.currentIndex];
-        state.spellWord = item.w;
+    function startSpell(isTest) {
+        document.getElementById('spell-screen').classList.add('active'); 
+        loadSpell(isTest ? 0 : state.currentIndex);
+    }
+    function loadSpell(idx) {
+        const idxToUse = (typeof idx !== 'undefined') ? idx : state.currentIndex;
+        const item = state.pool[idxToUse];
+        const prog = state.isTestMode ? `${state.currentIndex+1}/${state.testTotal}` : `${idxToUse+1}/${state.pool.length}`;
+        document.getElementById('spell-progress').innerText = prog;
         
-        // Reset
+        state.spellWord = item.w;
         const inp = document.getElementById('spell-input');
         const btn = document.querySelector('#spell-phase-2 button');
         inp.disabled = false; inp.value = ''; if(btn) btn.disabled = false;
@@ -1096,7 +1256,31 @@
         const btn = document.querySelector('#spell-phase-2 button'); 
         if (document.getElementById('spell-input').disabled) return; 
         document.getElementById('spell-input').disabled = true; if(btn) btn.disabled = true;
-        handleTurnResult(cleanString(val) === cleanString(state.spellWord), 'spell-feedback', loadSpell, state.pool[state.currentIndex]);
+        handleTurnResult(cleanString(val) === cleanString(state.spellWord), 'spell-feedback', () => loadSpell(), state.pool[state.isTestMode?0:state.currentIndex]);
+    }
+
+    // === JUMBLE ===
+    function startJumble() { document.getElementById('jumble-screen').classList.add('active'); loadJumble(); }
+    function loadJumble() {
+        const item = state.pool[state.currentIndex];
+        document.getElementById('jumble-progress').innerText = `${state.currentIndex+1}/${state.pool.length}`;
+        const scrambled = item.w.split('').sort(() => Math.random() - 0.5).join('');
+        document.getElementById('jumble-word').innerText = scrambled;
+        document.getElementById('jumble-feedback').innerHTML = "";
+        const area = document.getElementById('jumble-interaction-area'); area.innerHTML = '';
+        area.className = '';
+        const input = document.createElement('input');
+        input.type = 'text'; input.placeholder = 'Unscramble...';
+        input.style.textAlign = 'center'; input.autocomplete = 'off';
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-block'; btn.innerText = 'Check'; btn.style.marginTop = '10px';
+        const submit = () => {
+            if (input.disabled) return;
+            input.disabled = true; btn.disabled = true;
+            handleTurnResult(cleanString(input.value) === cleanString(item.w), 'jumble-feedback', loadJumble, item);
+        };
+        btn.onclick = submit; input.addEventListener('keypress', (e)=>{if(e.key==='Enter')submit()});
+        area.appendChild(input); area.appendChild(btn); input.focus();
     }
 
     // === ALPHA ===
@@ -1118,7 +1302,6 @@
                 state.xp += 15; saveData(); setTimeout(loadAlpha, 1500);
             }
         } else {
-            // Shake effect only for Alpha
             const win = document.getElementById('main-window');
             void win.offsetWidth; win.classList.add('shake-effect');
         }
