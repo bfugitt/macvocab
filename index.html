@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MacVocab v6.2</title>
+    <title>MacVocab v6.3</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -214,7 +214,7 @@
 
 <div class="window" id="main-window">
     <div class="title-bar">
-        <div class="title-box">MacVocab v6.2</div>
+        <div class="title-box">MacVocab v6.3</div>
     </div>
     
     <div class="content">
@@ -704,12 +704,19 @@
         spellWord: "", cardFlipped: false, alphaOrder: []
     };
 
-    const STORAGE_KEY = 'macvocab_v6';
+    const STORAGE_KEY = 'macvocab_v6_3';
 
     window.onload = () => {
         loadData();
         buildUnitSelector();
         updateReviewUI();
+        
+        // Add Global Enter Key Listener for Spelling Input
+        document.getElementById('spell-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                checkSpelling();
+            }
+        });
     };
 
     function loadData() {
